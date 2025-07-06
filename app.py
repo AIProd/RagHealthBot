@@ -110,18 +110,20 @@ def _build_index(pdf_paths: List[Path]):
 # ──────────────────────────────────────────────────────────────────────────────
 # 3.  Streamlit layout
 # ──────────────────────────────────────────────────────────────────────────────
-st.set_page_config(page_title="BobiHealth RAG Chatbot",
-                   page_icon="bobihealth_logo.jfif", layout="centered")
-with open("icon.png", "rb") as image_file:
-    encoded = base64.b64encode(image_file.read()).decode()
+# st.set_page_config(page_title="BobiHealth RAG Chatbot",
+#                    page_icon="bobihealth_logo.jfif", layout="centered")
+# with open("icon.png", "rb") as image_file:
+#     encoded = base64.b64encode(image_file.read()).decode()
+st.set_page_config(page_title="Healthcare Research Bot",
+                   page_icon="🩺", layout="centered")
 
 # HTML layout
 st.markdown(
-    f"""
-    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
-        <img src="data:image/png;base64,{encoded}" style="height:48px;">
-        <h1 style="margin: 0; font-size: 2.2rem;">RAG Chatbot</h1>
-    </div>
+    """
+    <h1 style="text-align:center; margin-bottom:0.5rem;">
+        Healthcare Research Bot
+       <span style="font-size:0.65em; font-weight:400;">by Mohit&nbsp;S</span>
+   </h1>
     """,
     unsafe_allow_html=True
 )
@@ -181,9 +183,9 @@ if "rag_chain" not in st.session_state and Path("faiss_index").exists():
             return_messages=True,
         )
         prompt_template = (
-            "You are a helpful assistant for BobiHealth.\n\n"
+            "You are Medical Research Bot.\n\n"
             "Use the following context to answer the user's question.\n"
-            "If you don't know the answer, say you don't know—don't fabricate.\n"
+            "If you don't know the answer, say you don't know in a polite way —don't fabricate.\n"
             "Response should not be in more than 30-50 words.\n\n"
             "{context}\n\n"
             "Chat History:\n{chat_history}\n\n"
