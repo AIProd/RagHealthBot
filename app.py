@@ -84,7 +84,7 @@ def _build_index(pdf_paths: List[Path]):
         return_messages=True,
     )
     prompt_template = (
-        "You are a helpful assistant for BobiHealth.\n\n"
+        "You are a helpful assistant who can help with Research and related Queries.\n\n"
         "Use the following context to answer the user's question.\n"
         "If you don't know the answer, say you don't know—don't fabricate.\n"
         "Response should not be in more than 30-50 words.\n\n"
@@ -119,7 +119,7 @@ st.markdown(
     """
     <h1 style="text-align:center; margin-bottom:0.5rem;">
         Healthcare Research Bot
-       <span style="font-size:0.65em; font-weight:400;">by Mohit&nbsp;S</span>
+       <span style="font-size:0.15em; font-weight:400;">by Mohit&nbsp;S</span>
    </h1>
     """,
     unsafe_allow_html=True
