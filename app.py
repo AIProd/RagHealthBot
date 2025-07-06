@@ -119,7 +119,7 @@ st.markdown(
     """
     <h1 style="text-align:center; margin-bottom:0.5rem;">
         Healthcare Research Bot
-       <span style="font-size:0.15em; font-weight:400;">by Mohit&nbsp;S</span>
+       <span style="font-size:0.25em; font-weight:400;">by Mohit&nbsp;S</span>
    </h1>
     """,
     unsafe_allow_html=True
