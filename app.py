@@ -110,10 +110,7 @@ def _build_index(pdf_paths: List[Path]):
 # ──────────────────────────────────────────────────────────────────────────────
 # 3.  Streamlit layout
 # ──────────────────────────────────────────────────────────────────────────────
-# st.set_page_config(page_title="BobiHealth RAG Chatbot",
-#                    page_icon="bobihealth_logo.jfif", layout="centered")
-# with open("icon.png", "rb") as image_file:
-#     encoded = base64.b64encode(image_file.read()).decode()
+
 st.set_page_config(page_title="Healthcare Research Bot",
                    page_icon="🩺", layout="centered")
 
