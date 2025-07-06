@@ -1,0 +1,9 @@
+streamlit==1.35.0
+tiktoken
+faiss-cpu
+pypdf
+openai>=1.27.0
+langchain
+langchain-openai
+langchain-community
+cryptography>=42.0.0
