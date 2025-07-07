@@ -61,12 +61,19 @@ def _build_index(pdf_paths: List[Path], progress_bar: Optional[st.progress] = No
     #     model=EMBED_MODEL,
     #     chunk_size=2048,
     # )
+    # embeddings = AzureOpenAIEmbeddings(
+    # azure_endpoint=AZURE_ENDPOINT,
+    # api_key=AZURE_API_KEY,
+    # openai_api_version=API_VERSION,          # ← add this
+    # azure_deployment=EMBED_MODEL,            # ← prefer this alias
+    # chunk_size=2048,
+    # )
+
     embeddings = AzureOpenAIEmbeddings(
-    azure_endpoint=AZURE_ENDPOINT,
-    api_key=AZURE_API_KEY,
-    openai_api_version=API_VERSION,          # ← add this
-    azure_deployment=EMBED_MODEL,            # ← prefer this alias
-    chunk_size=2048,
+        azure_endpoint=AZURE_ENDPOINT,
+        api_key=AZURE_API_KEY,
+        model=EMBED_MODEL,
+        chunk_size=2048,
     )
     vectordb = FAISS()
     batch_size = 64
@@ -214,11 +221,17 @@ if build_clicked:
 # Auto-load existing index if present
 if "rag_chain" not in st.session_state and Path("faiss_index").exists():
     with st.spinner("Loading existing index…"):
+        # emb = AzureOpenAIEmbeddings(
+        #     azure_endpoint=AZURE_ENDPOINT,
+        #     api_key=AZURE_API_KEY,
+        #     openai_api_version=API_VERSION,          # ← add
+        #     azure_deployment=EMBED_MODEL,            # ← change param name
+        #     chunk_size=2048,
+        # )
         emb = AzureOpenAIEmbeddings(
             azure_endpoint=AZURE_ENDPOINT,
             api_key=AZURE_API_KEY,
-            openai_api_version=API_VERSION,          # ← add
-            azure_deployment=EMBED_MODEL,            # ← change param name
+            model=EMBED_MODEL,
             chunk_size=2048,
         )
         db = FAISS.load_local("faiss_index", emb, allow_dangerous_deserialization=True)
