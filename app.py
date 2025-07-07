@@ -54,37 +54,20 @@ def _build_index(pdf_paths: List[Path], progress_bar: Optional[st.progress] = No
     splitter = RecursiveCharacterTextSplitter(chunk_size=3200, chunk_overlap=800)
     splits = splitter.split_documents(docs)
 
-    # 2·2 Embed in batches with visual progress
-    # embeddings = AzureOpenAIEmbeddings(
-    #     azure_endpoint=AZURE_ENDPOINT,
-    #     api_key=AZURE_API_KEY,
-    #     model=EMBED_MODEL,
-    #     chunk_size=2048,
-    # )
-    # embeddings = AzureOpenAIEmbeddings(
-    # azure_endpoint=AZURE_ENDPOINT,
-    # api_key=AZURE_API_KEY,
-    # openai_api_version=API_VERSION,          # ← add this
-    # azure_deployment=EMBED_MODEL,            # ← prefer this alias
-    # chunk_size=2048,
-    # )
-
+    # 2·2 Embed & store
     embeddings = AzureOpenAIEmbeddings(
         azure_endpoint=AZURE_ENDPOINT,
         api_key=AZURE_API_KEY,
-        model=EMBED_MODEL,
+        azure_deployment=EMBED_MODEL,          # deployment name on Azure
+        openai_api_version=API_VERSION,
         chunk_size=2048,
     )
-    vectordb = FAISS()
-    batch_size = 64
-    total = len(splits)
-    for i in range(0, total, batch_size):
-        batch = splits[i : i + batch_size]
-        vectordb.add_documents(batch, embeddings)
-        if progress_bar:
-            progress_bar.progress(min((i + batch_size) / total, 1.0))
-
+    if progress_bar:
+        progress_bar.progress(0.0)
+    vectordb = FAISS.from_documents(splits, embeddings)
     vectordb.save_local("faiss_index")  # persist across sessions
+    if progress_bar:
+        progress_bar.progress(1.0)
 
     # 2·3 Build RAG chain
     retriever = vectordb.as_retriever(search_kwargs={"k": 4})
@@ -103,7 +86,7 @@ def _build_index(pdf_paths: List[Path], progress_bar: Optional[st.progress] = No
         return_messages=True,
     )
     prompt_template = (
-        "You are Healthcare Research Bot by Mohit S.\n\n"
+        "You are Healthcare Research Bot.\n\n"
         "Use the following context to answer the user's question.\n"
         "If the answer is not in the context, say you do not know—do not fabricate.\n"
         "Respond in 30–50 words.\n\n"
@@ -139,7 +122,6 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-        /* body tweaks */
         main {max-width: 1100px; margin: 0 auto;}
         footer {visibility: hidden;}
         .user-bubble, .bot-bubble {
@@ -167,7 +149,7 @@ st.markdown(
         🩺 Healthcare Research Bot
     </h1>
     <div style="text-align:center;font-size:0.95rem;color:#666;margin-bottom:28px;">
-         — Ask and cite medical literature instantly by Mohit&nbsp;S
+        — Ask and cite medical literature instantly · Mohit&nbsp;S
     </div>
     """,
     unsafe_allow_html=True,
@@ -221,17 +203,11 @@ if build_clicked:
 # Auto-load existing index if present
 if "rag_chain" not in st.session_state and Path("faiss_index").exists():
     with st.spinner("Loading existing index…"):
-        # emb = AzureOpenAIEmbeddings(
-        #     azure_endpoint=AZURE_ENDPOINT,
-        #     api_key=AZURE_API_KEY,
-        #     openai_api_version=API_VERSION,          # ← add
-        #     azure_deployment=EMBED_MODEL,            # ← change param name
-        #     chunk_size=2048,
-        # )
         emb = AzureOpenAIEmbeddings(
             azure_endpoint=AZURE_ENDPOINT,
             api_key=AZURE_API_KEY,
-            model=EMBED_MODEL,
+            azure_deployment=EMBED_MODEL,
+            openai_api_version=API_VERSION,
             chunk_size=2048,
         )
         db = FAISS.load_local("faiss_index", emb, allow_dangerous_deserialization=True)
@@ -251,7 +227,7 @@ if "rag_chain" not in st.session_state and Path("faiss_index").exists():
             return_messages=True,
         )
         prompt_template = (
-            "You are Healthcare Research Bot by Mohit S.\n\n"
+            "You are Healthcare Research Bot.\n\n"
             "Use the following context to answer the user's question.\n"
             "If the answer is not in the context, say you do not know—do not fabricate.\n"
             "Respond in 30–50 words.\n\n"
@@ -277,7 +253,7 @@ if "rag_chain" not in st.session_state and Path("faiss_index").exists():
 
 # Clear conversation
 if clear_clicked:
-    for k in ("messages", "rag_chain"):
+    for k in ("messages", "rag_chain", "pdf_list"):
         st.session_state.pop(k, None)
     st.experimental_rerun()
 
