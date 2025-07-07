@@ -111,18 +111,50 @@ def _build_index(pdf_paths: List[Path]):
 # 3.  Streamlit layout
 # ──────────────────────────────────────────────────────────────────────────────
 
-st.set_page_config(page_title="Healthcare Research Bot",
-                   page_icon="🩺", layout="centered")
+st.set_page_config(
+    page_title="Healthcare Research Bot",
+    page_icon="🩺",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
-# HTML layout
+# Inject a bit of CSS for a cleaner look
 st.markdown(
     """
-    <h1 style="text-align:center; margin-bottom:0.5rem;">
-        Healthcare Research Bot
-       <span style="font-size:0.25em; font-weight:400;">by Mohit&nbsp;S</span>
-   </h1>
+    <style>
+        /* Hide default Streamlit footer */
+        footer {visibility: hidden;}
+        /* Add top padding */
+        .main {padding-top: 30px;}
+        /* Gradient heading */
+        .title-gradient {
+            font-weight: 800;
+            font-size: 2.6rem;
+            text-align: center;
+            background: linear-gradient(90deg,#00b4db,#0083b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0 0 4px 0;
+        }
+        /* Subtitle */
+        .subtitle {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 28px;
+        }
+    </style>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
+)
+
+st.markdown(
+    '<h1 class="title-gradient">Healthcare Research Bot</h1>',
+    unsafe_allow_html=True,
+)
+st.markdown(
+    '<div class="subtitle">by Mohit&nbsp;S — Ask and cite medical literature instantly</div>',
+    unsafe_allow_html=True,
 )
 
 # Sidebar – PDF upload / index controls
