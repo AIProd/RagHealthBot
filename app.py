@@ -153,7 +153,7 @@ st.markdown(
         🩺 Healthcare Research Bot
     </h1>
     <div style="text-align:center;font-size:0.95rem;color:#666;margin-bottom:28px;">
-        by Mohit&nbsp;S — Ask and cite medical literature instantly
+         — Ask and cite medical literature instantly by Mohit&nbsp;S
     </div>
     """,
     unsafe_allow_html=True,
