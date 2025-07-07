@@ -111,13 +111,20 @@ def _build_index(pdf_paths: List[Path]):
 # 3.  Streamlit layout
 # ──────────────────────────────────────────────────────────────────────────────
 
-st.set_page_config(
-    page_title="Healthcare Research Bot",
-    page_icon="🩺",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
-
+st.markdown("""
+<style>
+main {max-width: 1100px; margin: 0 auto;}
+footer {visibility: hidden;}
+.user-bubble, .bot-bubble {
+    padding: 10px 14px; border-radius: 10px; margin-bottom: 8px;
+    line-height: 1.45;
+}
+.user-bubble   {background:#e0f7fa; align-self:flex-end;}
+.bot-bubble    {background:#f1f8ff;}
+.chat-row {display:flex; gap:8px; align-items:flex-start;}
+.avatar {font-size:1.5rem;}
+</style>
+""", unsafe_allow_html=True)
 # Inject a bit of CSS for a cleaner look
 st.markdown(
     """
@@ -248,11 +255,25 @@ if clear_clicked:
 if "messages" not in st.session_state:
     st.session_state["messages"] = []  # [{role, content}, …]
 
-for m in st.session_state["messages"]:
-    with st.chat_message(m["role"]):
-        st.markdown(m["content"])
+# Helper to render chat messages with avatars and bubble style
+def render_msg(role, text):
+    avatar = "👤" if role == "user" else "🩺"
+    bubble_cls = "user-bubble" if role == "user" else "bot-bubble"
+    st.markdown(f'''
+        <div class="chat-row">
+            <div class="avatar">{avatar}</div>
+            <div class="{bubble_cls}">{text}</div>
+        </div>
+    ''', unsafe_allow_html=True)
 
-prompt = st.chat_input("Ask something about the indexed documents…")
+# Render chat history
+for m in st.session_state["messages"]:
+    render_msg(m["role"], m["content"])
+
+#prompt = st.chat_input("Ask something about the indexed documents…")
+if "rag_chain" not in st.session_state:
+    st.info("🧠 To get started:\n\n1. Upload a PDF in the sidebar\n2. Click **Build Index**\n3. Ask anything using the box below")
+
 if prompt:
     if "rag_chain" not in st.session_state:
         st.warning("Please build / load an index first from the sidebar.")
