@@ -150,7 +150,7 @@ st.markdown(
                -webkit-background-clip:text;
                -webkit-text-fill-color:transparent;
                margin:0 0 4px 0;">
-        Healthcare Research Bot
+        🩺 Healthcare Research Bot
     </h1>
     <div style="text-align:center;font-size:0.95rem;color:#666;margin-bottom:28px;">
         by Mohit&nbsp;S — Ask and cite medical literature instantly
