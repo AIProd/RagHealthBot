@@ -89,7 +89,7 @@ def _build_index(pdf_paths: List[Path], progress_bar: Optional[st.progress] = No
         "You are Healthcare Research Bot.\n\n"
         "Use the following context to answer the user's question.\n"
         "If the answer is not in the context, say you do not know—do not fabricate.\n"
-        "Respond in 30–50 words.\n\n"
+        "Respond in 30–50 words and output a dataframe if dataset format is requested.\n\n"
         "{context}\n\n"
         "Chat History:\n{chat_history}\n\n"
         "User question: {question}\n"
@@ -148,9 +148,9 @@ st.markdown(
                margin:0 0 4px 0;">
         🩺 Healthcare Research Bot
     </h1>
-    <div style="text-align:center;font-size:0.95rem;color:#666;margin-bottom:28px;">
-        — Ask and cite medical literature instantly · Mohit&nbsp;S
-    </div>
+    # <div style="text-align:center;font-size:0.95rem;color:#666;margin-bottom:28px;">
+    #     — Ask and cite medical literature instantly · Mohit&nbsp;S
+    # </div>
     """,
     unsafe_allow_html=True,
 )
